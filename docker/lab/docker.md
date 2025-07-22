@@ -66,8 +66,94 @@
      ```bash
      docker exec -it web1 ping web2
      ```
+### Example
+```bash
+docker network create appnet
+
+docker run -d --name db --network appnet   -e MYSQL_ROOT_PASSWORD=root mysql:5.7
+
+docker run -d --name wordpress --network appnet   -p 8080:80 wordpress
+```
+
+- `wordpress` can resolve `db` by name inside container.
+
+###  Types of Docker Networks
+
+### Bridge (Default)
+- Created automatically when Docker is installed.
+- Used when no network is specified.
+- Containers can communicate via container name (if on the same bridge).
+```bash
+docker network ls
+docker network inspect bridge
+```
+
+### Host
+- Container shares the host’s network stack (no isolation).
+- Faster but less secure.
+```bash
+docker run --network host nginx
+```
+
+### None
+- No networking at all.
+- Useful for fully isolated workloads.
+```bash
+docker run --network none nginx
+```
+
+### User-Defined Bridge
+- Better DNS-based discovery than default bridge.
+- Recommended for communication between multiple containers.
+```bash
+docker network create mybridge
+docker run -d --network mybridge --name web nginx
+docker run -it --network mybridge busybox ping web
+```
+
+### Overlay (Swarm Only)
+- Allows containers on different Docker hosts to communicate.
+- Requires Swarm mode.
+```bash
+docker network create --driver overlay myoverlay
+```
+
+### Macvlan
+- Assigns a MAC address to a container.
+- Allows container to appear as a physical device on the network.
+```bash
+docker network create -d macvlan   --subnet=192.168.1.0/24   --gateway=192.168.1.1   -o parent=eth0 pub_net
+```
 
 ---
+### Commandline 
+### Network Management Commands
+
+```bash
+docker network ls                            # List all networks
+docker network inspect <network>            # Inspect a network
+docker network create --driver bridge mynet # Create a custom network
+docker network rm <network>                 # Remove a network
+docker network connect mynet container1     # Connect container to network
+docker network disconnect mynet container1  # Disconnect container
+```
+
+
+### DNS & Name Resolution in Docker
+
+- Containers on the same user-defined bridge can resolve each other by **container name**.
+- Built-in DNS server available at `127.0.0.11`.
+
+### Port Mapping & Accessing Services
+
+```bash
+docker run -d -p 8080:80 nginx
+```
+- `-p 8080:80` → maps port 80 inside container to 8080 on the host.
+- Access via `localhost:8080` on the host machine.
+
+---
+
 ### **7. Custom Image creation**
 ### **Container Creation**
 1. **Run a Container from a Public Image:**
