@@ -1,0 +1,6 @@
+curl -X POST http://localhost:9000/add -H "Content-Type: application/json" -d '{"name": "Ramaraja}'
+
+CREATE TABLE exampledb.users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL
+);
