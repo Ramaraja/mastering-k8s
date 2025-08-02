@@ -4,7 +4,7 @@ set -e
 # ====== CONFIGURE ======
 AWS_REGION="us-east-1"
 VELERO_USER="velero"
-VELERO_BUCKET="velero-backup-1754061620" 
+VELERO_BUCKET="velero-backup-1754061620" # update the bucket creation during migration
 # =======================
 
 if [ -z "$VELERO_BUCKET" ]; then
