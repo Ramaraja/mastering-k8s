@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pvtest-1gb-1
+  labels:
+    app: webserver
+spec:
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  capacity:
+    storage: 1Gi
+
+  hostPath:
+    path: /Users/ramaraja/workspace/Trainings/Docker_k8s

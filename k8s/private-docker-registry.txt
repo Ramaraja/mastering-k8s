@@ -1,0 +1,18 @@
+Create a password for basic auth:
+--------------------------------
+
+mkdir -p ~/docker-registry/auth
+
+docker run --rm --entrypoint htpasswd httpd:alpine -Bbn myuser mypassword > ~/docker-registry/auth/htpasswd
+
+
+docker run -d \
+  -p 5001:5000 \
+  --restart=always \
+  --name secure-registry \
+  -v ~/docker-registry/data:/var/lib/registry \
+  -v ~/docker-registry/auth:/auth \
+  -e "REGISTRY_AUTH=htpasswd" \
+  -e "REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm" \
+  -e "REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd" \
+  registry:2
